@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>桃園市立中壢高商115學年度第2次教師甄選/健康與護理科試教籤</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans TC", sans-serif; }
+    body { background-color: #f1f5f9; color: #1e293b; padding: 15px; }
+    .max-w { max-width: 900px; margin: 0 auto; }
+    
+    header { background: #ffffff; padding: 20px; border-radius: 12px; text-align: center; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border-top: 6px solid #2563eb; margin-bottom: 20px; }
+    header h1 { font-size: 20px; font-weight: 800; color: #0f172a; line-height: 1.4; }
+    
+    .grid { display: flex; flex-wrap: wrap; gap: 20px; }
+    .col { flex: 1; min-width: 300px; background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+    
+    .wheel-box { position: relative; width: 280px; height: 280px; margin: 0 auto 20px auto; }
+    #wheelCanvas { width: 100%; height: 100%; border-radius: 50%; box-shadow: 0 8px 16px rgba(0,0,0,0.15); }
+    .pointer { position: absolute; top: -10px; left: 50%; transform: translateX(-50%); width: 0; height: 0; border-left: 15px solid transparent; border-right: 15px solid transparent; border-top: 25px solid #ef4444; z-index: 10; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2)); }
+    .center-cap { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 44px; height: 44px; background: #ffffff; border-radius: 50%; border: 3px solid #cbd5e1; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #64748b; z-index: 5; }
+    
+    .form-group { margin-bottom: 12px; }
+    .form-group label { display: block; font-size: 13px; font-weight: bold; color: #64748b; margin-bottom: 4px; }
+    .form-group input { width: 100%; padding: 10px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 14px; outline: none; }
+    
+    .btn { display: block; width: 100%; padding: 12px; border: none; border-radius: 8px; font-size: 15px; font-weight: bold; cursor: pointer; text-align: center; margin-bottom: 8px; }
+    .btn:active { opacity: 0.8; }
+    .btn-primary { background: #2563eb; color: #ffffff; }
+    .btn-secondary { background: #e2e8f0; color: #334155; }
+    .btn-success { background: #059669; color: #ffffff; width: auto; padding: 8px 16px; font-size: 13px; margin-bottom: 0; }
+    .btn-dark { background: #1e293b; color: #ffffff; font-size: 13px; padding: 8px; }
+    .btn-indigo { background: #4f46e5; color: #ffffff; font-size: 13px; padding: 8px; }
+    
+    .result-card { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 10px; padding: 15px; margin-bottom: 15px; }
+    .result-candidate { font-size: 12px; font-weight: bold; color: #0284c7; }
+    .result-tag { font-size: 22px; font-weight: 900; color: #0f172a; margin: 4px 0; }
+    .result-topic { font-size: 16px; font-weight: bold; color: #1e3a8a; line-height: 1.4; }
+    
+    .btn-group { display: flex; gap: 8px; }
+    .btn-group .btn { flex: 1; }
+    
+    #qrcode { display: flex; justify-content: center; margin-top: 12px; padding: 8px; background: #ffffff; border-radius: 8px; border: 1px solid #e2e8f0; }
+
+    .section-title { font-size: 16px; font-weight: bold; color: #0f172a; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+    .table-responsive { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; text-align: left; }
+    th, td { padding: 10px; border-bottom: 1px solid #e2e8f0; }
+    th { background: #f8fafc; color: #64748b; font-weight: 600; }
+    .badge { display: inline-block; padding: 2px 8px; background: #eff6ff; color: #2563eb; font-weight: bold; border-radius: 4px; }
+    .empty-text { text-align: center; color: #94a3b8; padding: 30px 0; font-size: 14px; }
+  </style>
+</head>
+<body>
+
+<div class="max-w">
+  <header>
+    <h1>桃園市立中壢高商115學年度第2次教師甄選/健康與護理科試教籤</h1>
+  </header>
+
+  <div class="grid">
+    <div class="col" style="display: flex; flex-direction: column; justify-content: center;">
+      <div class="wheel-box">
+        <div class="pointer"></div>
+        <canvas id="wheelCanvas" width="280" height="280"></canvas>
+        <div class="center-cap">?</div>
+      </div>
+
+      <div class="form-group">
+        <label for="candidateInput">應考人編號 / 姓名 (選填)</label>
+        <input type="text" id="candidateInput" placeholder="例如：考生 A01">
+      </div>
+
+      <button id="spinBtn" class="btn btn-primary" onclick="handleSpin()">開始轉盤抽題</button>
+      <button id="resetBtn" class="btn btn-secondary" onclick="handleReset()">重置 / 下一位應考人</button>
+    </div>
+
+    <div class="col" style="display: flex; flex-direction: column; justify-content: space-between;">
+      <div>
+        <div class="section-title">
+          <span>抽題結果揭示</span>
+          <span id="statusBadge" style="font-size: 12px; padding: 2px 8px; background: #f1f5f9; border-radius: 12px; color: #64748b;">尚未抽題</span>
+        </div>
+
+        <div id="resultEmpty" class="empty-text">
+          <p>請點擊「開始轉盤抽題」</p>
+          <p style="font-size: 12px; color: #cbd5e1; margin-top: 4px;">抽中後會在此揭示題目與發送工具</p>
+        </div>
+
+        <div id="resultBox" style="display: none;">
+          <div class="result-card">
+            <div class="result-candidate" id="resCandidate">應考人：考生 A01</div>
+            <div class="result-tag" id="resTag">籤牌 1</div>
+            <div class="result-topic" id="resTopic">題目名稱</div>
+          </div>
+
+          <div style="font-size: 12px; font-weight: bold; color: #64748b; margin-bottom: 8px;">快速傳輸工具：</div>
+          <div class="btn-group">
+            <button class="btn btn-dark" onclick="handleCopy()">📋 複製結果文字</button>
+            <button class="btn btn-indigo" onclick="handleShare()">📤 手機/平板分享</button>
+          </div>
+
+          <div id="qrcode"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col" style="margin-top: 20px;">
+    <div class="section-title">
+      <span>抽題紀錄彙整表</span>
+      <button class="btn btn-success" onclick="handleExport()">匯出抽題紀錄 (CSV)</button>
+    </div>
+
+    <div class="table-responsive">
+      <table>
+        <thead>
+          <tr>
+            <th>時間</th>
+            <th>應考人</th>
+            <th>籤號</th>
+            <th>抽中試教題目說明</th>
+          </tr>
+        </thead>
+        <tbody id="historyTbody">
+          <tr>
+            <td colspan="4" class="empty-text">尚無抽題紀錄</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  window.appData = {
+    topics: [
+      { tag: "籤牌 1", text: "第1章 愛自己好健康 - [1-2] 青少年常見健康問題" },
+      { tag: "籤牌 2", text: "第4章 健康心世界 - [4-3] 享受青春不憂鬱" },
+      { tag: "籤牌 3", text: "第6章 擁抱青春擁抱愛 - [6-1] 健康的性" }
+    ],
+    isSpinning: false,
+    currentDegree: 0,
+    history: [],
+    shareText: "",
+    timer: null
+  };
+
+  function drawWheel() {
+    var canvas = document.getElementById('wheelCanvas');
+    if (!canvas) return;
+    var ctx = canvas.getContext('2d');
+    var numSegments = window.appData.topics.length;
+    var arc = (2 * Math.PI) / numSegments;
+    var colors = ['#2563eb', '#10b981', '#f59e0b'];
+
+    ctx.clearRect(0, 0, 280, 280);
+
+    for (var i = 0; i < numSegments; i++) {
+      var angle = i * arc;
+      ctx.beginPath();
+      ctx.fillStyle = colors[i % colors.length];
+      ctx.moveTo(140, 140);
+      ctx.arc(140, 140, 140, angle, angle + arc);
+      ctx.lineTo(140, 140);
+      ctx.fill();
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = '#ffffff';
+      ctx.stroke();
+
+      ctx.save();
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 18px sans-serif";
+      ctx.translate(140 + Math.cos(angle + arc / 2) * 85, 140 + Math.sin(angle + arc / 2) * 85);
+      ctx.rotate(angle + arc / 2 + Math.PI / 2);
+      var text = "籤 " + (i + 1);
+      ctx.fillText(text, -ctx.measureText(text).width / 2, 0);
+      ctx.restore();
+    }
+  }
+
+  function handleSpin() {
+    if (window.appData.isSpinning) return;
+    
+    var candidateVal = document.getElementById('candidateInput').value.replace(/^\s+|\s+$/g, '');
+    var candidateName = candidateVal || ("應考人 " + (window.appData.history.length + 1));
+
+    window.appData.isSpinning = true;
+    document.getElementById('spinBtn').style.opacity = '0.5';
+
+    var selectedIndex = Math.floor(Math.random() * window.appData.topics.length);
+    var segmentAngle = 360 / window.appData.topics.length;
+    var targetSegmentCenter = selectedIndex * segmentAngle + segmentAngle / 2;
+    var targetDegree = 270 - targetSegmentCenter;
+    var extraRounds = (Math.floor(Math.random() * 4) + 5) * 360;
+    
+    window.appData.currentDegree += extraRounds + (targetDegree - (window.appData.currentDegree % 360));
+    if (window.appData.currentDegree < 3600) window.appData.currentDegree += 3600;
+
+    var canvas = document.getElementById('wheelCanvas');
+    canvas.style.transition = 'transform 4s cubic-bezier(0.15, 0.99, 0.18, 0.99)';
+    canvas.style.transform = 'rotate(' + window.appData.currentDegree + 'deg)';
+
+    window.appData.timer = setTimeout(function() {
+      var drawn = window.appData.topics[selectedIndex];
+      var now = new Date();
+      var timeStr = now.toTimeString().split(' ')[0];
+
+      document.getElementById('resultEmpty').style.display = 'none';
+      document.getElementById('resultBox').style.display = 'block';
+      
+      var badge = document.getElementById('statusBadge');
+      badge.innerText = "抽題完成";
+      badge.style.background = "#dcfce7";
+      badge.style.color = "#15803d";
+
+      document.getElementById('resCandidate').innerText = "應考人：" + candidateName;
+      document.getElementById('resTag').innerText = drawn.tag;
+      document.getElementById('resTopic').innerText = drawn.text;
+
+      window.appData.shareText = "【桃園市立中壢高商115學年度第2次教師甄選試教抽籤】\n應考人：" + candidateName + "\n抽中籤號：" + drawn.tag + "\n試教題目：" + drawn.text + "\n抽題時間：" + timeStr;
+
+      var qrContainer = document.getElementById('qrcode');
+      qrContainer.innerHTML = "";
+      if (window.QRCode) {
+        new QRCode(qrContainer, {
+          text: window.appData.shareText,
+          width: 120,
+          height: 120
+        });
+      }
+
+      window.appData.history.unshift({
+        time: timeStr,
+        candidate: candidateName,
+        tag: drawn.tag,
+        topic: drawn.text
+      });
+
+      renderHistoryTable();
+      window.appData.isSpinning = false;
+      document.getElementById('spinBtn').style.opacity = '1';
+    }, 4000);
+  }
+
+  function handleReset() {
+    if (window.appData.timer) clearTimeout(window.appData.timer);
+    window.appData.isSpinning = false;
+
+    document.getElementById('candidateInput').value = '';
+    document.getElementById('resultEmpty').style.display = 'block';
+    document.getElementById('resultBox').style.display = 'none';
+    
+    var badge = document.getElementById('statusBadge');
+    badge.innerText = "尚未抽題";
+    badge.style.background = "#f1f5f9";
+    badge.style.color = "#64748b";
+
+    document.getElementById('qrcode').innerHTML = "";
+    document.getElementById('spinBtn').style.opacity = '1';
+
+    var canvas = document.getElementById('wheelCanvas');
+    canvas.style.transition = 'none';
+    window.appData.currentDegree = 0;
+    canvas.style.transform = 'rotate(0deg)';
+  }
+
+  function renderHistoryTable() {
+    var tbody = document.getElementById('historyTbody');
+    if (!tbody) return;
+
+    if (window.appData.history.length === 0) {
+      tbody.innerHTML = '<tr><td colspan="4" class="empty-text">尚無抽題紀錄</td></tr>';
+      return;
+    }
+
+    var html = '';
+    for (var i = 0; i < window.appData.history.length; i++) {
+      var item = window.appData.history[i];
+      html += '<tr>' +
+        '<td style="color: #94a3b8; font-family: monospace;">' + item.time + '</td>' +
+        '<td style="font-weight: bold;">' + item.candidate + '</td>' +
+        '<td><span class="badge">' + item.tag + '</span></td>' +
+        '<td style="font-weight: 500; color: #0f172a;">' + item.topic + '</td>' +
+        '</tr>';
+    }
+    tbody.innerHTML = html;
+  }
+
+  function handleCopy() {
+    if (!window.appData.shareText) return;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(window.appData.shareText).then(function() {
+        alert("抽題結果已複製到剪貼簿！");
+      });
+    } else {
+      alert(window.appData.shareText);
+    }
+  }
+
+  function handleShare() {
+    if (!window.appData.shareText) return;
+    if (navigator.share) {
+      navigator.share({ title: '試教抽籤結果', text: window.appData.shareText });
+    } else {
+      handleCopy();
+    }
+  }
+
+  function handleExport() {
+    if (window.appData.history.length === 0) {
+      alert("目前尚無任何抽題紀錄！");
+      return;
+    }
+
+    var csv = "\uFEFF時間,應考人,籤號,抽中試教題目\n";
+    for (var i = 0; i < window.appData.history.length; i++) {
+      var item = window.appData.history[i];
+      csv += '"' + item.time + '","' + item.candidate + '","' + item.tag + '","' + item.topic + '"\n';
+    }
+
+    var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    var link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute("download", "桃園市立中壢高商_試教抽題紀錄.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+
+  window.onload = function() {
+    drawWheel();
+  };
+</script>
+
+</body>
+</html>
